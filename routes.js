@@ -18,7 +18,11 @@ router.get('/tweets', async ctx => {
 
     try {
         jwt.verify(token, process.env.JWT_SECRET)
-        const tweets = await prisma.tweet.findMany();
+        const tweets = await prisma.tweet.findMany({
+            include: {
+                user: true
+            }
+        });
         ctx.body = tweets;
 
     } catch (error) {
@@ -55,7 +59,7 @@ router.post('/tweets', async ctx => {
 })
 
 router.delete('/tweets', async ctx => {
-    const id = 'cl3z2ceho00018w0rg0ujrbsy'
+    const id = 'cl40m9prd0011os0r5k4vfm46'
 
     const doc = await prisma.tweet.delete({
         where: { id: id }
