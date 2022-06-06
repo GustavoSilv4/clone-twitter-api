@@ -33,7 +33,7 @@ router.get('/tweets', async ctx => {
 })
 
 router.post('/tweets', async ctx => {
-    const [, token] = ctx.request.headers?.authorization?.split(' ') || [];
+    const [, token] = ctx.request.headers?.authorization?.split(' ') || []
 
     if (!token) {
         ctx.status = 401
@@ -42,20 +42,19 @@ router.post('/tweets', async ctx => {
 
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET)
-        const tweet = await prisma.tweet.create({
+        const tweets = await prisma.tweet.create({
             data: {
                 userId: payload.sub,
                 text: ctx.request.body.text
-            }
+            },
         })
-        ctx.body = tweet
 
+        ctx.body = tweets
     } catch (error) {
+        console.log(error)
         ctx.status = 401
         return
     }
-
-
 })
 
 router.delete('/tweets', async ctx => {
